@@ -2,7 +2,7 @@
 	Shobhit Mittal
 	14116061, ECE 3rd Year
 	Implementation of Interval Tree (insertion,deletion and search)
-	(using BST (without RB) )
+	(using BST  )
 */
 
 #include<iostream>
