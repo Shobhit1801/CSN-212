@@ -264,9 +264,10 @@ int main()
     //root=insert(root, 80);
     struct node* temp;
     temp=search(root,{21,23});
+	cout<<"Level wise Traversal:"<<endl;
     printLevelOrder(root);
   //  struct node* temp=search(root,60);
-    cout<<temp->data.low;
+  //  cout<<temp->data.low;
     
    
 }
