@@ -4,14 +4,14 @@ using namespace std;
  
 // Binary search 
 int findInd(vector<int> &vect, int left, int right, int key) {
-    while (right>left) {
+    while (right-left>1) {
     int mid = left + (right-left)/2;
     if (vect[mid] >= key)
         right = mid;
     else
         left = mid;
     }
- 
+ 	
     return right;
 }
  
@@ -22,7 +22,6 @@ int LCS(int arr[], int n){
 	int size=1;
 	for(int i=0;i<n;i++)
 	{
-		
 		if(arr[i]<vect_seq[0])	vect_seq[0]=arr[i];
 		else if(arr[i]>vect_seq[size-1])
 		{
@@ -32,7 +31,7 @@ int LCS(int arr[], int n){
         else	vect_seq[findInd(vect_seq,-1,size-1,arr[i])]=arr[i];
 		
 	}
-	
+	//cout<<"out";
 	return  size;
 }
  
@@ -50,9 +49,11 @@ int main()
 			cin>>arr[i];
 			arr[n+i]=arr[i];
 		}
-	
-		for(int i=0;i<n;i++)
+		
+		for(int i=0;i<n;i++){
 			final=max(final,LCS(arr+i,n));	
+			//cout<<i<<endl;
+		}
 		
 		cout<<final<<endl;
 	}
