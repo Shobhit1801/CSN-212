@@ -1,3 +1,10 @@
+/*
+	Shobhit Mittal	14116061
+	Btech ECE 3rd year
+	Bellman Ford Algo
+	DAA Assignment
+*/
+
 #include<iostream>
 #include<time.h>
 using namespace std;
