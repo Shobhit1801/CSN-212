@@ -1,0 +1,95 @@
+#include<iostream>
+using namespace std;
+
+struct Edge
+{
+	int src;
+	int dest;
+	int wt;	
+};
+
+void bellmanFord(struct Edge* graph,int src,int V,int E)
+{
+	int dist[V];
+	int INT_MAX=99999;
+	int x,y,w;
+	dist[src]=0;	//dist from src to src is 0
+	for(int i=0;i<V;i++)	//dist from src to any other vertex has been initialized to infnite
+	{
+		if(i!=src)	dist[i]=INT_MAX;
+	}
+	
+	for(int i=1;i<V-1;i++)	//Relaxing all edges V-1 times
+	{
+		for(int j=0;j<E;j++)
+		{
+			x=graph[j].src;
+			y=graph[j].dest;
+			w=graph[j].wt;
+			if(dist[x]!=INT_MAX && dist[y]>dist[x]+w )	dist[y]=dist[x]+w;	
+		}
+		
+	}
+	
+	for(int i=0;i<E;i++)	//checking if a negative cycle exists or not
+	{
+			x=graph[i].src;
+			y=graph[i].dest;
+			w=graph[i].wt;
+			if(dist[x]!=INT_MAX && dist[y]>dist[x]+w )
+				cout<<"Graph contains negative weight cycle"<<endl;
+	}
+	
+	for(int i=0;i<V;i++)
+		cout<<"Shortest distance of vertex "<<i<<" from "<<src<<" is = "<<dist[i]<<endl;
+}
+
+int main()
+{
+	int vertices,edges,source;
+	vertices=5;
+	edges=8;
+	Edge* graph=new Edge[edges];
+	 // add edge 0-1 (or A-B in above figure)
+    graph[0].src = 0;
+    graph[0].dest = 1;
+    graph[0].wt = -1;
+ 
+    // add edge 0-2 (or A-C in above figure)
+    graph[1].src = 0;
+    graph[1].dest = 2;
+    graph[1].wt = 4;
+ 
+    // add edge 1-2 (or B-C in above figure)
+    graph[2].src = 1;
+    graph[2].dest = 2;
+    graph[2].wt = 3;
+ 
+    // add edge 1-3 (or B-D in above figure)
+    graph[3].src = 1;
+    graph[3].dest = 3;
+    graph[3].wt = 2;
+ 
+    // add edge 1-4 (or A-E in above figure)
+    graph[4].src = 1;
+    graph[4].dest = 4;
+    graph[4].wt = 2;
+ 
+    // add edge 3-2 (or D-C in above figure)
+    graph[5].src = 3;
+    graph[5].dest = 2;
+    graph[5].wt = 5;
+ 
+    // add edge 3-1 (or D-B in above figure)
+    graph[6].src = 3;
+    graph[6].dest = 1;
+    graph[6].wt = 1;
+ 
+    // add edge 4-3 (or E-D in above figure)
+    graph[7].src = 4;
+    graph[7].dest = 3;
+    graph[7].wt = -3;
+    
+    bellmanFord(graph,0,vertices,edges); 
+	
+}
