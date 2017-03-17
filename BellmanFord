@@ -1,4 +1,5 @@
 #include<iostream>
+#include<time.h>
 using namespace std;
 
 struct Edge
@@ -90,6 +91,13 @@ int main()
     graph[7].dest = 3;
     graph[7].wt = -3;
     
-    bellmanFord(graph,0,vertices,edges); 
+    clock_t t;
+    float clocks_per_sec=1000;
+    float time;
+    t=clock();
+    bellmanFord(graph,0,vertices,edges);
+    t=clock()-t;
+    time=(float(t))/clocks_per_sec;
+ 	cout<<"Time taken is = "<<time<<endl;
 	
 }
