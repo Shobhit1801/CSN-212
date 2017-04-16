@@ -1,0 +1,149 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+const double pi=3.14159;
+
+struct Point
+{
+	int x;
+	int y;
+	int angle ;
+};
+
+
+
+bool angleSort(Point a,Point b)
+{
+	return (a.angle < b.angle);
+	
+}
+
+//function to check whether p,q,r are CCW or CW
+bool isLeftTurn(Point p,Point q,Point r)
+{
+	//int abSlope = (b.y - a.y)/(b.x - a.x);
+	//int bcSlope = (c.y - b.y)/(c.x - b.x);
+	   int val = (q.y - p.y) * (r.x - q.x) -  (q.x - p.x) * (r.y - q.y);
+	if(val<0)	return 1;
+	return 0;
+}
+
+void GrahamScan(vector<Point> points)
+{
+	stack<int> hull;
+	stack<int> prev;
+	int n = points.size();
+	int l = 0;
+	//find leftmost point
+	for(int i=0;i<n;i++)
+	{
+		if(points[i].x < points[l].x)	l=i;
+	}
+	
+
+	//find angle w.r.t y=yl line;
+	for(int i=0;i<n;i++)
+	{
+		if(points[i].y!=points[l].y)
+		{
+			points[i].angle = int(atan(double(points[i].x-points[l].x)/double(points[l].y-points[i].y))*180/pi) ; 
+			if(points[i].angle<0)	points[i].angle += 180;
+		}
+		else
+		{
+			if(points[i].x!=points[l].x)
+			points[i].angle = 90;
+			else points[i].angle=0;
+		}
+	
+	}
+
+	//sort by angle 
+	sort(points.begin(),points.end(),angleSort);
+
+	int flag,k,temp;
+	hull.push(0);
+	hull.push(1);
+	prev.push(0);
+
+	for(int i=1;i<n-1;i++)
+	{
+		k=prev.top();
+
+		if(isLeftTurn(points[k],points[i],points[i+1])){
+		//	cout<<"left turn towards: "<<i+1<<endl;
+			prev.push(hull.top());
+			hull.push(i+1);
+			//cout<<"yes"<<endl;
+		}
+		else
+		{
+
+			k=i+1;
+			//cout<<"removed: "<<hull.top()<<endl;
+			hull.pop();			
+			prev.pop();
+
+			
+			i = hull.top();
+			//k=2;
+			
+			while(!isLeftTurn(points[prev.top()],points[i],points[k]) && i!=1)
+			{
+			//	cout<<"check left: "<<isLeftTurn(points[prev.top()],points[i],points[i+k]);			
+				i--;
+		
+				hull.pop();
+				prev.pop();
+			}
+			//cout<<hull.top()<<endl;
+			i=k-1;
+			prev.push(hull.top());
+			hull.push(i+1);
+	
+					
+		}
+	}
+	Point t;
+	
+	while(!hull.empty())
+	{
+		k=hull.top();
+		hull.pop();
+		t = points[k];
+		cout<<"("<<t.x<<","<<t.y<<")"<<endl;	
+	}
+		
+	
+}
+
+int main()
+{
+	
+	vector<Point> points;
+	int n;
+	cout<<"Enter number of points: ";
+	cin>>n;
+	Point a ;
+	
+	for(int i=0;i<n;i++)
+	{
+		cout<<"Enter x-coordinate: ";
+		cin>>a.x;
+		cout<<"Enter y-coordinate: "; 
+		cin>>a.y;
+		a.angle=0;
+		points.push_back(a);
+		
+	}
+//	points.push_back({0, 3,0}); 
+//	points.push_back({1, 1,0});
+//		points.push_back({2, 2,0});
+//			points.push_back({4, 4,0});
+//           	points.push_back( {0, 0,0});
+//			points.push_back({1, 2,0});
+//			points.push_back( {3, 1,0}) ;
+//			points.push_back({3, 3,0});
+  
+    GrahamScan(points);
+}
