@@ -1,0 +1,124 @@
+
+#include<bits/stdc++.h>
+using namespace std;
+
+struct Point
+{
+	int x;
+	int y;
+};
+
+vector<Point> hull;
+
+bool notEqual(Point a,Point b)
+{
+	if(a.x==b.x && a.y==b.y) return 0;
+	return 1;
+}
+Point findFarthest(vector<Point> S,Point a,Point b)
+{
+	Point far=S[0];
+	double dist_max =0;
+	double dist;
+	for(int i=0;i<S.size();i++){	
+		 dist = abs(((b.y-a.y)*S[i].x - (b.x-a.x)*S[i].y + b.x*a.y - b.y*a.x)/sqrt((b.y-a.y)*(b.y-a.y) - (b.x-a.x)*(b.x-a.x)));	
+		 if(dist>dist_max) far=S[i];
+	}
+	return far;
+}
+
+vector<Point> findRightSet(vector<Point> set, Point a,Point b)
+{
+	int val;
+	vector<Point> above;
+	for(int c=0;c<set.size();c++)
+	{
+		if(notEqual(a,set[c]) && notEqual(b,set[c])){
+		val = (set[c].y-a.y)*(b.x-a.x) - (set[c].x-a.x)*(b.y-a.y);
+		if(val<0)	above.push_back(set[c]);
+		}
+	}
+	return above;
+		
+}
+
+vector<Point> pushC(vector<Point> ch,Point a,Point b, Point c)
+{
+	vector<Point> pushed;
+	for(int i=0;i<ch.size();i++)
+	{
+		pushed.push_back(ch[i]);
+		if(!notEqual(ch[i],a))	pushed.push_back(c);	
+		
+	}
+	return pushed;
+}
+void FindHull(vector<Point> S,Point a,Point b)
+{
+	if(S.empty())	return;
+	Point c = findFarthest(S,a,b);
+
+	hull = pushC(hull,a,b,c) ;	//push c in b/w a and b
+//	hull.push_back(temp);
+
+	vector<Point> S1 = findRightSet(S,a,c);
+	vector<Point> S2 = findRightSet(S,c,b);	
+	
+	FindHull(S1,a,c);
+	FindHull(S2,c,b);
+}
+
+void QuickHull(vector<Point> points,int n)
+{
+	int l=0;
+	int r=0;
+	for(int i=0;i<n;i++)
+	{
+		if(points[i].x < points[l].x)	l=i;
+		if(points[i].x > points[r].x)	r=i;
+	}
+	
+	//find S1 and S2 lying on right of  lr and rl respectively
+	vector<Point> S1 = findRightSet(points,points[l],points[r]);
+	vector<Point> S2 = findRightSet(points,points[r],points[l]);
+	
+	hull.push_back(points[l]);
+	hull.push_back(points[r]);
+	
+	FindHull(S1,points[l],points[r]);
+	FindHull(S2,points[r],points[l]);
+	
+	for(int i=0;i<hull.size();i++)
+		cout<<"("<<hull[i].x<<","<<hull[i].y<<")"<<endl;
+}
+
+
+int main()
+{
+	vector<Point> points;
+	int n;
+	cout<<"Enter number of points: ";
+	cin>>n;
+	Point a ;
+	
+	for(int i=0;i<n;i++)
+	{
+		cout<<"Enter x-coordinate: ";
+		cin>>a.x;
+		cout<<"Enter y-coordinate: "; 
+		cin>>a.y;
+		
+		points.push_back(a);
+		
+	}
+//	points.push_back({0, 3,0}); 
+//	points.push_back({1, 1,0});
+//		points.push_back({2, 2,0});
+//			points.push_back({4, 4,0});
+//           	points.push_back( {0, 0,0});
+//			points.push_back({1, 2,0});
+//			points.push_back( {3, 1,0}) ;
+//			points.push_back({3, 3,0});
+    
+    QuickHull(points,n);
+}
