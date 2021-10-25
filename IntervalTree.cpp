@@ -23,7 +23,7 @@ struct node
 };
 
 
-// funtion to create a new node 
+// function to create a new node 
 struct node* createNode(interval data)
 {
 	struct node* temp = new node; //if new is not used then temp will get deallocated 
@@ -38,12 +38,20 @@ struct node* createNode(interval data)
 struct node* insert(struct node* root,interval data)
 {
 	struct node* temp=root;
-	if(temp==NULL)	return createNode(data);
+	if(temp==NULL) {
+		return createNode(data);
+	}
 	
-	if(temp->max<data.high)	temp->max=data.high;
-	if(data.low>=(temp->data).low)
+	if(temp->max<data.high)	{
+		temp->max=data.high;
+	}
+
+	if(data.low>=(temp->data).low) {
 		temp->right=insert(temp->right,data);				
-	else	temp->left=insert(temp->left,data);
+	}
+	else {
+		temp->left=insert(temp->left,data);
+	}
 		
 	return root;
 }
@@ -55,9 +63,12 @@ struct node* search(struct node* root,interval data)
 	struct node* temp=root;
 	while(temp!=NULL && (data.low>temp->data.high || data.high<temp->data.low))
 	{
-		if(temp->left!=NULL && data.low<temp->left->max)
-				temp=temp->left;
-		else temp=temp->right;
+		if(temp->left!=NULL && data.low<temp->left->max) {
+			temp=temp->left;
+		}
+		else {
+			temp=temp->right;
+		}
 	}
 	return temp;
 }
@@ -70,9 +81,12 @@ struct node* searchParent(struct node* root,interval data)
 	while(temp!=NULL && (data.low!=temp->data.low || data.high!=temp->data.high))
 	{
 		par=temp;
-		if(temp->left!=NULL && data.low<temp->data.low)
+		if(temp->left!=NULL && data.low<temp->data.low) {
 				temp=temp->left;
-		else temp=temp->right;
+		}
+		else {
+			temp=temp->right;
+		}
 		
 	}
 	return par;	
